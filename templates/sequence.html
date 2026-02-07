@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>序列圖範例 - Mermaid Demo</title>
+    <link rel="stylesheet" href="template.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+    <header class="header">
+        <h1>📝 序列圖 (Sequence Diagram)</h1>
+        <a href="../index.html" class="nav-link">← 返回首頁</a>
+    </header>
+
+    <div class="main-container">
+        <div class="description">
+            <p>序列圖用於描述系統間的互動順序。適合展示 API 調用、用戶與系統的交互、微服務間的通信等。</p>
+        </div>
+
+        <div class="controls">
+            <button id="update-btn" class="btn btn-primary">🔄 更新預覽</button>
+            <button id="reset-btn" class="btn btn-reset">↩️ 恢復預設</button>
+        </div>
+
+        <div class="content">
+            <div class="panel">
+                <h2>✏️ 編輯語法</h2>
+                <div class="editor-container">
+                    <textarea id="code-editor" spellcheck="false"></textarea>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>👀 即時預覽</h2>
+                <div class="preview-container">
+                    <div id="preview"></div>
+                    <div id="error-message" class="error-message" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 Mermaid Demo | 使用 <a href="https://mermaid.js.org/" target="_blank">Mermaid.js</a> 建立</p>
+    </footer>
+
+    <script src="template.js"></script>
+    <script>
+        const defaultCode = `sequenceDiagram
+    participant 用戶
+    participant 前端
+    participant API
+    participant 資料庫
+
+    用戶->>前端: 點擊登入按鈕
+    前端->>用戶: 顯示登入表單
+    用戶->>前端: 輸入帳號密碼
+    前端->>API: POST /api/login
+    activate API
+    API->>資料庫: 查詢用戶資料
+    activate 資料庫
+    資料庫-->>API: 返回用戶資料
+    deactivate 資料庫
+    API->>API: 驗證密碼
+    alt 驗證成功
+        API-->>前端: 返回 Token
+        前端->>前端: 儲存 Token
+        前端-->>用戶: 跳轉到主頁
+    else 驗證失敗
+        API-->>前端: 返回錯誤訊息
+        前端-->>用戶: 顯示錯誤提示
+    end
+    deactivate API`;
+        
+        init(defaultCode);
+    </script>
+</body>
+</html>
