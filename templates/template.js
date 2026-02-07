@@ -1,12 +1,25 @@
 // Mermaid 模板頁面共用腳本
-let defaultCode = '';
+let storedDefaultCode = '';
 
 // 初始化
 function init(initialCode) {
-    defaultCode = initialCode;
+    storedDefaultCode = initialCode;
     const editor = document.getElementById('code-editor');
     editor.value = initialCode;
-    updatePreview();
+    
+    // 等待 mermaid 載入後才初始化
+    if (typeof mermaid !== 'undefined') {
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: 'default',
+            securityLevel: 'loose',
+            fontFamily: 'Microsoft JhengHei, Arial, sans-serif'
+        });
+        updatePreview();
+    } else {
+        console.error('Mermaid library not loaded');
+        document.getElementById('preview').innerHTML = '<p style="color: #e74c3c;">⚠️ 無法載入 Mermaid 函式庫</p>';
+    }
     
     // 設定事件監聽
     document.getElementById('update-btn').addEventListener('click', updatePreview);
@@ -25,6 +38,11 @@ async function updatePreview() {
     const code = document.getElementById('code-editor').value;
     const preview = document.getElementById('preview');
     const errorDiv = document.getElementById('error-message');
+    
+    if (typeof mermaid === 'undefined') {
+        preview.innerHTML = '<p style="color: #e74c3c;">⚠️ Mermaid 函式庫未載入</p>';
+        return;
+    }
     
     try {
         // 清除舊內容
@@ -49,15 +67,7 @@ async function updatePreview() {
 // 恢復預設值
 function resetToDefault() {
     if (confirm('確定要恢復到預設範例嗎？')) {
-        document.getElementById('code-editor').value = defaultCode;
+        document.getElementById('code-editor').value = storedDefaultCode;
         updatePreview();
     }
 }
-
-// 初始化 Mermaid
-mermaid.initialize({
-    startOnLoad: false,
-    theme: 'default',
-    securityLevel: 'loose',
-    fontFamily: 'Microsoft JhengHei, Arial, sans-serif'
-});
